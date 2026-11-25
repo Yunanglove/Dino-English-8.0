@@ -1,0 +1,1107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kawaii Dino Phonics World</title>
+
+<style>
+:root {
+  --pink:#ffb9d0;
+  --purple:#c9b5f5;
+  --blue:#bce7f8;
+  --green:#c8ebd0;
+  --yellow:#ffedaa;
+  --ink:#51465e;
+  --paper:#fffafd;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:"Trebuchet MS",Arial,sans-serif;
+  color:var(--ink);
+  background:linear-gradient(135deg,#fff0f6,#f2edff,#eaf8ff);
+  min-height:100vh;
+}
+header {
+  text-align:center;
+  padding:25px 12px 10px;
+}
+h1 {
+  font-size:clamp(27px,5vw,43px);
+  color:#a17bd0;
+  margin:5px;
+}
+.subtitle { color:#8b7b9d; }
+nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:9px;
+  padding:12px;
+}
+button,select,input { font:inherit; }
+button {
+  border:0;
+  border-radius:16px;
+  padding:12px 17px;
+  color:#55466c;
+  font-weight:bold;
+  background:var(--purple);
+  box-shadow:0 4px 0 #b49edc;
+  cursor:pointer;
+  transition:.15s;
+}
+button:hover { transform:translateY(-2px); }
+button:active { transform:translateY(2px); box-shadow:none; }
+button:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.pink { background:var(--pink); box-shadow:0 4px 0 #e99dbb; }
+.blue { background:var(--blue); box-shadow:0 4px 0 #8fcce5; }
+.green { background:var(--green); box-shadow:0 4px 0 #94cba5; }
+.yellow { background:var(--yellow); box-shadow:0 4px 0 #e4d17b; }
+main { width:min(1000px,94%); margin:12px auto 40px; }
+.panel {
+  background:rgba(255,255,255,.93);
+  border:3px solid white;
+  border-radius:26px;
+  padding:22px;
+  box-shadow:0 8px 24px #bcaedc35;
+  margin-bottom:18px;
+}
+.center { text-align:center; }
+.hidden { display:none !important; }
+select {
+  padding:12px;
+  border:2px solid #dfd2f5;
+  border-radius:14px;
+  background:white;
+  color:var(--ink);
+}
+.big-dino { font-size:85px; margin:12px; }
+.stats {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:16px 0;
+}
+.stat {
+  background:#fff4cb;
+  padding:10px 15px;
+  border-radius:14px;
+  font-weight:bold;
+}
+.progress {
+  height:13px;
+  background:#eee8fa;
+  border-radius:20px;
+  overflow:hidden;
+  margin:15px 0;
+}
+.progress div {
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ffb9d0,#bca3f4);
+  transition:width .3s;
+}
+.question {
+  font-size:clamp(23px,4vw,34px);
+  font-weight:bold;
+  margin:20px 0;
+}
+.prompt { font-size:17px; line-height:1.5; color:#82728f; }
+.answer-box {
+  background:#fff7fb;
+  border:2px dashed #efb6d0;
+  border-radius:18px;
+  padding:16px;
+  margin:15px auto;
+  max-width:560px;
+}
+input[type=text] {
+  width:min(100%,400px);
+  padding:14px;
+  border:2px solid #ddcfff;
+  border-radius:14px;
+  font-size:20px;
+  text-align:center;
+}
+.options {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:17px 0;
+}
+.status { min-height:28px; font-weight:bold; margin:12px; }
+.result-stars { font-size:40px; letter-spacing:5px; }
+.category {
+  padding:18px;
+  border-radius:22px;
+  margin:20px 0;
+}
+.magic-bg { background:#f4edff; border:2px solid #dfd0ff; }
+.normal-bg { background:#effaf1; border:2px solid #d1ecd7; }
+.silly-bg { background:#fff4e9; border:2px solid #f5d7b9; }
+.category h2 { margin:3px 0 12px; }
+.magic-title { color:#9870d0; }
+.normal-title { color:#64a67c; }
+.silly-title { color:#d48b58; }
+.dino-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:13px;
+}
+.dino-card {
+  background:#fff;
+  border:2px solid #f0e5f2;
+  border-radius:19px;
+  padding:10px;
+  text-align:center;
+  overflow:hidden;
+}
+.dino-card img {
+  display:block;
+  width:100%;
+  max-width:155px;
+  margin:auto;
+}
+.dino-card strong { display:block; margin:4px; }
+.dino-card small { color:#8d7c9e; }
+.locked { opacity:.5; filter:grayscale(.7); }
+.egg-area {
+  background:#fff8ed;
+  border:2px dashed #e8c9a7;
+  border-radius:22px;
+  padding:18px;
+  margin:15px auto;
+  max-width:550px;
+}
+.egg-art {
+  width:125px;
+  height:145px;
+  display:block;
+  margin:5px auto;
+  animation:eggBob 2s infinite ease-in-out;
+}
+@keyframes eggBob {
+  0%,100% { transform:rotate(-3deg) translateY(0); }
+  50% { transform:rotate(3deg) translateY(-5px); }
+}
+.hatch-reveal {
+  animation:reveal .65s ease-out;
+}
+@keyframes reveal {
+  from { transform:scale(.3) rotate(-12deg); opacity:0; }
+  to { transform:scale(1) rotate(0); opacity:1; }
+}
+footer { text-align:center; padding:20px; color:#9b8cae; }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌸 Kawaii Dino Phonics World 🦕</h1>
+  <div class="subtitle">Learn sounds, collect stars and hatch adorable dinosaurs!</div>
+</header>
+
+<nav>
+  <button onclick="showPage('home')">🏠 Home</button>
+  <button class="pink" onclick="startExercise(1)">🌷 Exercise 1</button>
+  <button class="blue" onclick="startExercise(2)">🧁 Exercise 2</button>
+  <button class="green" onclick="showPage('collection')">🦖 Dino Collection</button>
+</nav>
+
+<main>
+
+<section id="home" class="panel center">
+  <div class="big-dino">🦕</div>
+  <h2>Welcome to Dino Phonics!</h2>
+  <p>Choose your age group and begin your adventure.</p>
+
+  <p><strong>Choose your age:</strong></p>
+  <select id="age">
+    <option value="3-5">3–5 years old</option>
+    <option value="6-8" selected>6–8 years old</option>
+    <option value="9-12">9–12 years old</option>
+    <option value="13-17">13–17 years old</option>
+  </select>
+
+  <div class="stats">
+    <div class="stat">⭐ Stars: <span id="homeStars">0</span></div>
+    <div class="stat">🥚 Eggs: <span id="homeEggs">0</span></div>
+    <div class="stat">🦖 Dinosaurs: <span id="homeDinos">0</span>/20</div>
+  </div>
+
+  <div id="homeEggArea" class="egg-area hidden">
+    <h3>🥚 You have an egg waiting!</h3>
+    <div id="homeEggCount"></div>
+    <button class="yellow" onclick="showPage('collection')">Go hatch your egg!</button>
+  </div>
+
+  <h3>Choose your adventure!</h3>
+  <div class="options">
+    <button class="pink" onclick="startExercise(1)">🌷 Exercise 1</button>
+    <button class="blue" onclick="startExercise(2)">🧁 Exercise 2</button>
+  </div>
+  <p class="prompt">Each exercise has exactly 10 questions. Both exercises are always available!</p>
+</section>
+
+<section id="game" class="panel center hidden">
+  <h2 id="exerciseTitle">Exercise</h2>
+  <div class="stats">
+    <div class="stat">Question <span id="questionNumber">1</span>/10</div>
+    <div class="stat">⭐ Correct: <span id="score">0</span></div>
+  </div>
+  <div class="progress"><div id="progressBar"></div></div>
+
+  <div id="questionType" class="stat">Phonics</div>
+  <div id="questionText" class="question"></div>
+  <div id="questionPrompt" class="prompt"></div>
+
+  <div id="voiceArea" class="answer-box">
+    <div>🎤 Speak your answer clearly!</div>
+    <div class="options">
+      <button class="pink" id="micButton" onclick="startListening()">🎤 Start microphone</button>
+      <button class="blue" onclick="startListening()">🔁 Retry</button>
+    </div>
+    <div id="transcript" class="prompt">Your spoken answer will appear here.</div>
+  </div>
+
+  <div id="spellingArea" class="answer-box hidden">
+    <p>🔊 Listen to the word, then type its spelling.</p>
+    <button class="yellow" onclick="speakSpelling()">🔊 Hear the word</button>
+    <p><input id="spellingInput" type="text" placeholder="Type the word here"></p>
+  </div>
+
+  <div id="feedback" class="status"></div>
+  <div class="options">
+    <button class="green" id="checkButton" onclick="checkAnswer()">Check answer ✓</button>
+    <button class="blue hidden" id="nextButton" onclick="nextQuestion()">Next question ➜</button>
+  </div>
+  <button onclick="showPage('home')">🏠 Back home</button>
+</section>
+
+<section id="results" class="panel center hidden">
+  <div class="big-dino">🎉</div>
+  <h2>Exercise completed!</h2>
+  <p>Wonderful work, phonics explorer!</p>
+  <div class="result-stars" id="earnedStars"></div>
+  <h3 id="resultScore"></h3>
+  <h3 id="resultCategory"></h3>
+  <p id="rewardMessage"></p>
+  <div id="resultEggArea"></div>
+  <div class="stats">
+    <div class="stat">⭐ Total stars: <span id="resultTotalStars">0</span></div>
+    <div class="stat">🥚 Eggs: <span id="resultEggs">0</span></div>
+  </div>
+  <div class="options">
+    <button class="pink" onclick="startExercise(1)">Exercise 1 again</button>
+    <button class="blue" onclick="startExercise(2)">Exercise 2 again</button>
+    <button class="green" onclick="showPage('collection')">My dinosaurs</button>
+  </div>
+</section>
+
+<section id="collection" class="panel hidden">
+  <div class="center">
+    <h2>🥚 My Dinosaur Egg Collection</h2>
+    <p>Every 20 stars earns one mystery egg!</p>
+    <div class="stats">
+      <div class="stat">⭐ Stars: <span id="collectionStars">0</span></div>
+      <div class="stat">🥚 Eggs: <span id="collectionEggs">0</span></div>
+      <div class="stat">🦕 Dinosaurs: <span id="collectionCount">0</span>/20</div>
+    </div>
+    <div id="hatchArea" class="egg-area">
+      <h3>🥚 Your mystery eggs</h3>
+      <div id="eggQueue"></div>
+      <button id="hatchButton" class="yellow" onclick="hatchEgg()">🥚 HATCH EGG!</button>
+      <div id="hatchResult"></div>
+    </div>
+  </div>
+
+  <div class="category magic-bg">
+    <h2 class="magic-title">✨ MAGIC DINOS</h2>
+    <p>Magical and sparkly dinosaur friends!</p>
+    <div id="magicGrid" class="dino-grid"></div>
+  </div>
+
+  <div class="category normal-bg">
+    <h2 class="normal-title">🌿 NORMAL DINOS</h2>
+    <p>Adorable everyday dinosaur friends!</p>
+    <div id="normalGrid" class="dino-grid"></div>
+  </div>
+
+  <div class="category silly-bg">
+    <h2 class="silly-title">🤪 SILLY DINOS</h2>
+    <p>Funny, goofy and lovable dinosaur friends!</p>
+    <div id="sillyGrid" class="dino-grid"></div>
+  </div>
+
+  <div class="center">
+    <button onclick="showPage('home')">🏠 Back home</button>
+  </div>
+</section>
+
+</main>
+
+<footer>Made with 💗 for phonics explorers!</footer>
+
+<script>
+/* ---------------- SAVE DATA ---------------- */
+
+const STORAGE_KEY = "kawaiiDinoWorldEggs2026";
+
+let saved = {
+  stars:0,
+  unlocked:[],
+  eggs:[],
+  eggsCreated:0
+};
+
+try {
+  const old = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if(old && typeof old.stars === "number") {
+    saved = {
+      stars:old.stars,
+      unlocked:Array.isArray(old.unlocked) ? old.unlocked : [],
+      eggs:Array.isArray(old.eggs) ? old.eggs : [],
+      eggsCreated:old.eggsCreated || 0
+    };
+  }
+} catch(e) {}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById("homeStars").textContent = saved.stars;
+  document.getElementById("homeEggs").textContent = saved.eggs.length;
+  document.getElementById("homeDinos").textContent = saved.unlocked.length;
+  document.getElementById("collectionStars").textContent = saved.stars;
+  document.getElementById("collectionEggs").textContent = saved.eggs.length;
+  document.getElementById("collectionCount").textContent = saved.unlocked.length;
+  document.getElementById("resultTotalStars").textContent = saved.stars;
+  document.getElementById("resultEggs").textContent = saved.eggs.length;
+
+  document.getElementById("homeEggArea").classList.toggle("hidden",saved.eggs.length===0);
+  document.getElementById("homeEggCount").textContent =
+    saved.eggs.length+" mystery egg"+(saved.eggs.length===1?"":"s")+" waiting!";
+}
+
+/* ---------------- PAGE NAVIGATION ---------------- */
+
+function showPage(id) {
+  ["home","game","results","collection"].forEach(page => {
+    document.getElementById(page).classList.toggle("hidden",page!==id);
+  });
+  updateStats();
+  if(id==="collection") renderCollection();
+}
+
+/* ---------------- QUESTION BANKS ---------------- */
+
+const questionBanks = {
+ "3-5":{
+  phonics:[
+   ["PR","prize",["pr","p r","prize"]],
+   ["BR","brown",["br","b r","brown"]],
+   ["TR","tree",["tr","t r","tree"]],
+   ["CR","crab",["cr","c r","crab"]],
+   ["FL","flag",["fl","f l","flag"]],
+   ["DR","drum",["dr","d r","drum"]]
+  ],
+  vowels:[
+   ["A",["a","ay"]],
+   ["E",["e","ee"]],
+   ["I",["i","eye"]],
+   ["O",["o","oh"]]
+  ],
+  sentences:[
+   ["The cat is big.",["the cat is big","the cat big"]],
+   ["I like my dog.",["i like my dog","i like dog"]],
+   ["The sun is hot.",["the sun is hot","the sun hot"]],
+   ["A red ball.",["a red ball","red ball"]]
+  ],
+  spelling:["cat","sun","dog","hat","pig","bed","cup","map","fox","pen"]
+ },
+ "6-8":{
+  phonics:[
+   ["SH","ship",["sh","ship"]],
+   ["CH","chair",["ch","chair"]],
+   ["TH","thumb",["th","thumb"]],
+   ["PR","prize",["pr","p r","prize"]],
+   ["BR","brown",["br","b r","brown"]],
+   ["TR","train",["tr","t r","train"]]
+  ],
+  vowels:[
+   ["A",["a","ay"]],
+   ["E",["e","ee"]],
+   ["I",["i","eye"]],
+   ["O",["o","oh"]]
+  ],
+  sentences:[
+   ["The little bird can fly.",["the little bird can fly","little bird can fly"]],
+   ["I love reading books.",["i love reading books","i love to read books"]],
+   ["My puppy likes to play.",["my puppy likes to play","my puppy likes play"]],
+   ["We went to the park.",["we went to the park","we go to the park"]]
+  ],
+  spelling:["rabbit","flower","garden","window","pencil","planet","basket","sunset","purple","kitten"]
+ },
+ "9-12":{
+  phonics:[
+   ["STR","string",["str","string"]],
+   ["SPL","splash",["spl","splash"]],
+   ["SCR","screen",["scr","screen"]],
+   ["TH","think",["th","think"]],
+   ["SH","shiny",["sh","shiny"]],
+   ["CH","cheese",["ch","cheese"]]
+  ],
+  vowels:[
+   ["I",["i","eye"]],
+   ["U",["u","you"]],
+   ["A",["a","ay"]],
+   ["E",["e","ee"]]
+  ],
+  sentences:[
+   ["The clever fox crossed the bridge.",["the clever fox crossed the bridge","the fox crossed the bridge"]],
+   ["We explored the beautiful garden.",["we explored the beautiful garden","we explore the beautiful garden"]],
+   ["The stars shine brightly tonight.",["the stars shine brightly tonight","stars shine brightly tonight"]],
+   ["My favourite subject is science.",["my favourite subject is science","my favorite subject is science"]]
+  ],
+  spelling:["adventure","discovery","beautiful","butterfly","triangle","important","chocolate","wonderful","library","mysterious"]
+ },
+ "13-17":{
+  phonics:[
+   ["STR","strong",["str","strong"]],
+   ["SPL","splendid",["spl","splendid"]],
+   ["SCR","scramble",["scr","scramble"]],
+   ["TH","thoughtful",["th","thoughtful"]],
+   ["SH","shimmer",["sh","shimmer"]],
+   ["CH","character",["ch","character"]]
+  ],
+  vowels:[
+   ["A",["a","ay"]],
+   ["E",["e","ee"]],
+   ["I",["i","eye"]],
+   ["U",["u","you"]]
+  ],
+  sentences:[
+   ["The scientist carefully examined the experiment.",["the scientist carefully examined the experiment","the scientist examined the experiment"]],
+   ["Learning new skills can open exciting opportunities.",["learning new skills can open exciting opportunities","learning new skills opens opportunities"]],
+   ["Communication is important in every community.",["communication is important in every community","communication is important"]],
+   ["Curiosity encourages lifelong learning.",["curiosity encourages lifelong learning","curiosity encourages learning"]]
+  ],
+  spelling:["communication","imagination","environment","responsibility","extraordinary","knowledge","independent","opportunity","achievement","pronunciation"]
+ }
+};
+
+/* ---------------- DINOSAUR CHARACTERS ---------------- */
+
+const dinosaurData = [
+ ["Luna","Magic","#d8baff","unicorn"],
+ ["Stella","Magic","#a9dcff","stego"],
+ ["Aurora","Magic","#ffc0da","ptero"],
+ ["Misty","Magic","#c4eadb","longneck"],
+ ["Nova","Magic","#ffe2a1","triceratops"],
+ ["Twinkle","Magic","#d5c7ff","spino"],
+ ["Pearl","Magic","#bde8ee","ankylosaurus"],
+ ["Iris","Magic","#ffc6bd","parasaur"],
+ ["Cosmo","Magic","#c5d4ff","raptor"],
+ ["Mochi","Magic","#f6c8e7","diplodocus"],
+
+ ["Clover","Normal","#bce4c4","stego"],
+ ["Peaches","Normal","#ffc6ae","triceratops"],
+ ["Pudding","Normal","#e9cafa","longneck"],
+ ["Daisy","Normal","#c3e8f7","parasaur"],
+ ["Waffles","Normal","#f8d99e","ankylosaurus"],
+ ["Bubbles","Normal","#b7d6ff","ptero"],
+ ["Muffin","Normal","#f5c8d4","diplodocus"],
+
+ ["Pickles","Silly","#d2e9a9","raptor"],
+ ["Noodle","Silly","#f9d4a6","spino"],
+ ["Pebble","Silly","#d7c9e8","tiny"]
+];
+
+function svgDino(kind,color,index) {
+ const palettes = {
+  unicorn:"#fff0b5",
+  stego:"#f1c7e1",
+  ptero:"#f7c7d8",
+  longneck:"#d6c7ff",
+  triceratops:"#f5d8a5",
+  spino:"#b9e2e0",
+  ankylosaurus:"#c8d8a9",
+  parasaur:"#f4d2a9",
+  raptor:"#c5d9ed",
+  diplodocus:"#e9c9e5",
+  tiny:"#ffe1aa"
+ };
+ const accent = palettes[kind] || "#fff0b5";
+ let body = "";
+ let head = "";
+ let extra = "";
+ let tail = "";
+
+ if(kind==="stego") {
+  body = `<path d="M34 105 Q43 69 85 75 Q126 72 141 107 Q133 133 91 135 Q48 136 34 105Z"/>`;
+  extra = `<path d="M48 89 Q45 70 57 64 Q68 68 67 86 Q79 53 91 58 Q103 64 98 84 Q111 63 122 70 Q133 79 119 98" fill="${accent}"/>`;
+  tail = `<path d="M37 109 Q16 103 13 88 Q31 89 44 101"/>`;
+  head = `<path d="M111 91 Q137 78 150 95 Q153 111 132 118 L112 115Z"/>`;
+ } else if(kind==="triceratops") {
+  body = `<path d="M34 106 Q44 77 87 78 Q123 77 139 108 Q128 136 88 136 Q47 136 34 106Z"/>`;
+  extra = `<path d="M104 65 Q121 43 137 65 L146 99 Q134 117 109 110Z" fill="${accent}"/>`;
+  tail = `<path d="M39 111 Q19 115 14 101 Q29 99 46 105"/>`;
+  head = `<path d="M107 85 L120 60 L125 86 L142 64 L140 101 Q130 120 107 114Z"/>`;
+ } else if(kind==="ptero") {
+  body = `<path d="M59 102 Q72 77 105 88 Q129 101 119 126 Q91 140 65 124Z"/>`;
+  extra = `<path d="M84 103 Q48 25 13 35 Q31 81 68 118Z M105 104 Q133 33 160 36 Q145 86 119 120Z" fill="${accent}"/>`;
+  tail = `<path d="M67 120 L35 135 L72 129"/>`;
+  head = `<path d="M105 77 Q124 52 145 67 Q157 80 139 94 L113 100Z"/>`;
+ } else if(kind==="longneck" || kind==="diplodocus") {
+  body = `<path d="M34 109 Q48 79 89 87 Q122 90 134 116 Q119 138 82 136 Q48 136 34 109Z"/>`;
+  extra = `<path d="M100 104 Q89 71 101 42 Q105 27 119 29 Q127 31 122 47 L119 109Z" fill="${color}"/>`;
+  tail = `<path d="M39 111 Q14 105 8 87 Q26 92 51 102"/>`;
+  head = `<path d="M109 31 Q115 13 136 20 Q148 27 139 40 Q126 48 116 41Z"/>`;
+ } else if(kind==="spino") {
+  body = `<path d="M33 110 Q43 79 85 83 Q122 80 140 110 Q128 137 87 137 Q47 137 33 110Z"/>`;
+  extra = `<path d="M46 94 L48 66 L62 78 L75 43 L88 76 L104 48 L115 82 L129 65 L131 105Z" fill="${accent}"/>`;
+  tail = `<path d="M38 112 Q16 118 9 102 Q27 96 48 104"/>`;
+  head = `<path d="M113 88 Q136 77 150 94 Q152 110 130 116 L111 112Z"/>`;
+ } else if(kind==="ankylosaurus") {
+  body = `<path d="M30 108 Q39 77 88 80 Q128 79 143 111 Q130 139 84 137 Q41 136 30 108Z"/>`;
+  extra = `<path d="M47 83 Q54 67 65 82 Q77 61 88 82 Q101 62 111 83 Q126 69 134 91" fill="${accent}"/>`;
+  tail = `<path d="M37 111 Q17 109 13 94 L24 90 L17 82 L37 100"/>`;
+  head = `<path d="M111 91 Q137 78 151 98 Q151 117 129 120 L110 114Z"/>`;
+ } else if(kind==="parasaur") {
+  body = `<path d="M34 107 Q46 77 88 80 Q126 79 140 110 Q127 136 86 136 Q47 135 34 107Z"/>`;
+  extra = `<path d="M114 78 Q112 48 130 38 Q148 48 140 79Z" fill="${accent}"/>`;
+  tail = `<path d="M38 111 Q16 114 11 99 Q27 97 47 104"/>`;
+  head = `<path d="M112 88 Q135 77 152 94 Q154 108 133 117 L111 114Z"/>`;
+ } else if(kind==="raptor") {
+  body = `<path d="M47 100 Q62 75 94 82 Q119 89 117 116 Q98 134 70 126Z"/>`;
+  extra = `<path d="M61 117 Q65 135 58 145 L75 132 M100 118 Q105 134 101 145 L116 132" fill="none"/>`;
+  tail = `<path d="M58 102 Q31 91 12 70 Q35 75 67 91"/>`;
+  head = `<path d="M102 83 Q123 58 143 75 Q153 89 133 99 L108 103Z"/>`;
+ } else {
+  body = `<path d="M40 111 Q47 76 88 78 Q128 79 139 112 Q125 137 87 137 Q49 137 40 111Z"/>`;
+  extra = `<path d="M50 86 Q44 70 55 63 Q68 68 66 87 M111 87 Q109 68 121 63 Q134 70 128 89" fill="${accent}"/>`;
+  tail = `<path d="M43 112 Q20 120 13 101 Q31 96 49 104"/>`;
+  head = `<path d="M110 88 Q137 78 150 97 Q151 115 128 119 L108 113Z"/>`;
+ }
+
+ const svg = `
+ <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 160">
+ <defs>
+  <linearGradient id="body${index}" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#ffffff" stop-opacity=".35"/>
+   <stop offset=".55" stop-color="${color}"/>
+   <stop offset="1" stop-color="${color}"/>
+  </linearGradient>
+  <linearGradient id="shine${index}" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#ffffff" stop-opacity=".75"/>
+   <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </linearGradient>
+ </defs>
+ <ellipse cx="86" cy="143" rx="49" ry="7" fill="#bba9c7" opacity=".22"/>
+ <g stroke="#79668e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+  <g fill="${color}">${tail}</g>
+  <g fill="${color}">${extra}</g>
+  <g fill="url(#body${index})">${body}</g>
+  <g fill="${color}">${head}</g>
+  <path d="M61 126 L57 139 M91 132 L91 141 M116 125 L120 138" fill="none" stroke-width="5"/>
+ </g>
+ <g>
+  <ellipse cx="111" cy="94" rx="7.5" ry="10" fill="#493c58"/>
+  <ellipse cx="136" cy="94" rx="7.5" ry="10" fill="#493c58"/>
+  <ellipse cx="109" cy="90" rx="2.8" ry="3.6" fill="white"/>
+  <ellipse cx="134" cy="90" rx="2.8" ry="3.6" fill="white"/>
+  <ellipse cx="101" cy="110" rx="8" ry="4.5" fill="#ff9fbd" opacity=".8"/>
+  <ellipse cx="145" cy="110" rx="8" ry="4.5" fill="#ff9fbd" opacity=".8"/>
+  <path d="M119 115 Q126 122 134 114" fill="none" stroke="#8e617d" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M85 89 Q96 79 104 84" fill="none" stroke="url(#shine${index})" stroke-width="5" stroke-linecap="round"/>
+ </g>
+ <path d="M33 49 Q36 41 40 49 Q48 52 40 56 Q36 64 33 56 Q25 52 33 49Z" fill="#ffe58b"/>
+ <circle cx="151" cy="45" r="4" fill="#ffb9d0"/>
+ <circle cx="25" cy="78" r="3" fill="#c6a7ed"/>
+ <path d="M74 65 Q80 57 86 65" fill="none" stroke="#ffffff" stroke-width="3" opacity=".8"/>
+ </svg>`;
+ return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
+}
+
+/* ---------------- EGGS ---------------- */
+
+function eggSVG() {
+ return `
+ <svg class="egg-art" viewBox="0 0 130 150" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="eggPaint" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#fff9ed"/>
+   <stop offset="1" stop-color="#f3cce4"/>
+  </linearGradient>
+ </defs>
+ <ellipse cx="65" cy="139" rx="36" ry="6" fill="#d8bfd1" opacity=".3"/>
+ <path d="M65 8 C30 8 13 58 19 96 C23 128 43 139 65 139 C87 139 107 128 111 96 C117 58 100 8 65 8Z"
+       fill="url(#eggPaint)" stroke="#a88bb2" stroke-width="3"/>
+ <path d="M34 66 Q65 45 96 66" fill="none" stroke="#e9a8cb" stroke-width="5" stroke-linecap="round"/>
+ <path d="M42 88 Q65 70 88 88" fill="none" stroke="#c8b1ee" stroke-width="5" stroke-linecap="round"/>
+ <path d="M60 105 L65 96 L70 105 L79 108 L70 112 L65 121 L60 112 L51 108Z" fill="#ffcf78"/>
+ <circle cx="44" cy="42" r="4" fill="white"/>
+ <circle cx="86" cy="35" r="3" fill="white"/>
+ </svg>`;
+}
+
+function renderEggQueue() {
+ const queue = document.getElementById("eggQueue");
+ queue.innerHTML = "";
+
+ if(saved.eggs.length===0) {
+  queue.innerHTML = "<p>No eggs yet. Earn 20 stars to get your first egg! 💗</p>";
+  document.getElementById("hatchButton").disabled = true;
+  return;
+ }
+
+ document.getElementById("hatchButton").disabled = false;
+
+ const wrap = document.createElement("div");
+ wrap.innerHTML = eggSVG();
+ queue.appendChild(wrap);
+ const count = document.createElement("p");
+ count.textContent = saved.eggs.length+" mystery egg"+(saved.eggs.length===1?"":"s")+" waiting to hatch!";
+ queue.appendChild(count);
+}
+
+function hatchEgg() {
+ if(saved.eggs.length===0) return;
+
+ const egg = saved.eggs.shift();
+ const category = egg.category;
+
+ let index = dinosaurData.findIndex((d,i) =>
+   d[1]===category && !saved.unlocked.includes(i)
+ );
+
+ if(index===-1) {
+  index = dinosaurData.findIndex((d,i)=>!saved.unlocked.includes(i));
+ }
+
+ if(index===-1) {
+  document.getElementById("hatchResult").textContent =
+    "You have collected all 20 dinosaurs! 🏆";
+  saveData();
+  renderEggQueue();
+  return;
+ }
+
+ saved.unlocked.push(index);
+ saveData();
+
+ const d = dinosaurData[index];
+ const result = document.getElementById("hatchResult");
+ result.innerHTML = "";
+
+ const reveal = document.createElement("div");
+ reveal.className = "hatch-reveal";
+
+ const heading = document.createElement("h2");
+ heading.textContent = "🎉 Your egg hatched!";
+ const img = document.createElement("img");
+ img.src = svgDino(d[3],d[2],index);
+ img.alt = d[0];
+ img.style.width = "210px";
+ img.style.maxWidth = "100%";
+ const name = document.createElement("h2");
+ name.textContent = d[0]+"!";
+ const type = document.createElement("p");
+ type.textContent = d[1].toUpperCase()+" DINO";
+
+ reveal.append(heading,img,name,type);
+ result.appendChild(reveal);
+
+ renderEggQueue();
+ renderCollection();
+}
+
+/* ---------------- COLLECTION ---------------- */
+
+function renderCollection() {
+ const groups = {
+  Magic:document.getElementById("magicGrid"),
+  Normal:document.getElementById("normalGrid"),
+  Silly:document.getElementById("sillyGrid")
+ };
+
+ Object.values(groups).forEach(g=>g.innerHTML="");
+
+ dinosaurData.forEach((d,index)=>{
+  const unlocked = saved.unlocked.includes(index);
+  const card = document.createElement("div");
+  card.className = "dino-card"+(unlocked?"":" locked");
+
+  const img = document.createElement("img");
+  img.src = svgDino(d[3],d[2],index);
+  img.alt = unlocked ? d[0] : "Mystery dinosaur";
+
+  const name = document.createElement("strong");
+  name.textContent = unlocked ? "🦕 "+d[0] : "🔒 Mystery Dino";
+
+  const type = document.createElement("small");
+  type.textContent = unlocked ? d[1]+" Dino" : "Hatch an egg to unlock";
+
+  card.append(img,name,type);
+  groups[d[1]].appendChild(card);
+ });
+
+ renderEggQueue();
+}
+
+/* ---------------- QUESTION BUILDER ---------------- */
+
+function shuffle(array) {
+ return [...array].sort(()=>Math.random()-.5);
+}
+
+function buildQuestions(age,number) {
+ const bank = questionBanks[age];
+ const offset = (number-1);
+
+ const p = shuffle(bank.phonics).slice(offset*3,offset*3+3);
+ const v = shuffle(bank.vowels).slice(offset*2,offset*2+2);
+ const s = shuffle(bank.sentences).slice(offset*2,offset*2+2);
+ const w = shuffle(bank.spelling).slice(offset*3,offset*3+3);
+
+ const result=[];
+
+ p.forEach(q=>result.push({
+  type:"Phonics",
+  title:"Say the sound: "+q[0],
+  prompt:"Say the combined sound aloud. For example, "+q[1]+".",
+  answer:q[0].toLowerCase(),
+  aliases:q[2],
+  spoken:q[1]
+ }));
+
+ v.forEach(q=>result.push({
+  type:"Vowels",
+  title:"Say the vowel letter "+q[0],
+  prompt:"Say the letter name clearly.",
+  answer:q[0].toLowerCase(),
+  aliases:q[1],
+  spoken:q[0]
+ }));
+
+ s.forEach(q=>result.push({
+  type:"Sentence",
+  title:"Say this sentence",
+  prompt:q[0],
+  answer:q[0].toLowerCase(),
+  aliases:q[1],
+  spoken:q[0]
+ }));
+
+ w.forEach(word=>result.push({
+  type:"Spelling",
+  title:"Spell the word!",
+  prompt:"Listen carefully and type the word.",
+  answer:word.toLowerCase(),
+  spoken:word
+ }));
+
+ return result;
+}
+
+/* ---------------- GAME STATE ---------------- */
+
+let exercise=1;
+let questions=[];
+let current=0;
+let score=0;
+let recognition=null;
+let transcriptAnswer="";
+let questionLocked=false;
+let finishing=false;
+
+function startExercise(number) {
+ stopListening();
+ speechSynthesis.cancel();
+
+ exercise=number;
+ current=0;
+ score=0;
+ questionLocked=false;
+ finishing=false;
+
+ const age=document.getElementById("age").value;
+ questions=buildQuestions(age,number);
+
+ if(questions.length!==10) {
+  alert("There was a problem preparing the questions. Please refresh the page.");
+  return;
+ }
+
+ document.getElementById("exerciseTitle").textContent="Exercise "+number+" 🌸";
+ document.getElementById("score").textContent="0";
+ showPage("game");
+ renderQuestion();
+}
+
+function renderQuestion() {
+ if(current>=10) {
+  finishExercise();
+  return;
+ }
+
+ stopListening();
+ transcriptAnswer="";
+ questionLocked=false;
+
+ const q=questions[current];
+
+ document.getElementById("questionNumber").textContent=current+1;
+ document.getElementById("progressBar").style.width=(current/10*100)+"%";
+ document.getElementById("questionType").textContent=q.type;
+ document.getElementById("questionText").textContent=q.title;
+ document.getElementById("questionPrompt").textContent=q.prompt;
+ document.getElementById("feedback").textContent="";
+ document.getElementById("transcript").textContent="Your spoken answer will appear here.";
+
+ document.getElementById("nextButton").classList.add("hidden");
+ document.getElementById("checkButton").classList.remove("hidden");
+
+ const spelling=q.type==="Spelling";
+ document.getElementById("voiceArea").classList.toggle("hidden",spelling);
+ document.getElementById("spellingArea").classList.toggle("hidden",!spelling);
+ document.getElementById("spellingInput").value="";
+
+ if(spelling) setTimeout(speakSpelling,300);
+}
+
+/* ---------------- SPEECH ---------------- */
+
+function speakSpelling() {
+ const q=questions[current];
+ if(!q || q.type!=="Spelling") return;
+
+ if(!("speechSynthesis" in window)) {
+  document.getElementById("feedback").textContent="Your browser cannot play speech.";
+  return;
+ }
+
+ speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(q.spoken);
+ utterance.rate=.8;
+ speechSynthesis.speak(utterance);
+}
+
+function startListening() {
+ if(questionLocked) return;
+
+ const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition) {
+  document.getElementById("feedback").textContent=
+   "Speech recognition is not supported here. Please use Google Chrome.";
+  return;
+ }
+
+ stopListening();
+ recognition=new SpeechRecognition();
+ recognition.lang="en-SG";
+ recognition.interimResults=false;
+ recognition.maxAlternatives=5;
+
+ document.getElementById("feedback").textContent="🎤 Listening... Speak now!";
+ document.getElementById("micButton").textContent="🎤 Listening...";
+
+ recognition.onresult=function(event) {
+  const alternatives=[];
+  for(let i=0;i<event.results[0].length;i++) {
+   alternatives.push(event.results[0][i].transcript);
+  }
+  transcriptAnswer=alternatives.join(" ");
+  recognition._alternatives=alternatives;
+  document.getElementById("transcript").textContent="I heard: "+transcriptAnswer;
+  document.getElementById("feedback").textContent="Great! Press Check answer when ready.";
+  document.getElementById("micButton").textContent="🎤 Start microphone";
+ };
+
+ recognition.onerror=function(event) {
+  document.getElementById("feedback").textContent=
+   event.error==="not-allowed"
+    ? "Please allow microphone access in your browser settings."
+    : "I could not hear clearly. Please try again!";
+  document.getElementById("micButton").textContent="🎤 Start microphone";
+ };
+
+ recognition.onend=function() {
+  document.getElementById("micButton").textContent="🎤 Start microphone";
+ };
+
+ try {
+  recognition.start();
+ } catch(e) {
+  document.getElementById("feedback").textContent="Please wait a moment and try again.";
+ }
+}
+
+function stopListening() {
+ if(recognition) {
+  try { recognition.stop(); } catch(e) {}
+ }
+}
+
+/* ---------------- ANSWER CHECKING ---------------- */
+
+function normalize(text) {
+ return (text||"").toLowerCase()
+  .replace(/[.,!?;:'"]/g,"")
+  .replace(/\s+/g," ")
+  .trim();
+}
+
+function similarity(a,b) {
+ a=normalize(a);
+ b=normalize(b);
+ if(a===b) return 1;
+ const aa=a.split(" ");
+ const bb=b.split(" ");
+ const matches=aa.filter(word=>bb.includes(word)).length;
+ return matches/Math.max(aa.length,bb.length);
+}
+
+function checkAnswer() {
+ if(questionLocked) return;
+
+ const q=questions[current];
+ let correct=false;
+
+ if(q.type==="Spelling") {
+  correct=normalize(document.getElementById("spellingInput").value)===q.answer;
+ } else {
+  const alternatives=recognition && recognition._alternatives
+   ? recognition._alternatives : [transcriptAnswer];
+
+  const heard=alternatives.map(normalize).filter(Boolean);
+  const accepted=(q.aliases||[q.answer]).map(normalize);
+
+  if(q.type==="Sentence") {
+   correct=heard.some(h=>accepted.some(a=>similarity(h,a)>=.7));
+  } else {
+   correct=heard.some(h=>accepted.some(a=>
+    h===a || h.includes(a) || a.includes(h)
+   ));
+  }
+ }
+
+ questionLocked=true;
+ stopListening();
+
+ const feedback=document.getElementById("feedback");
+
+ if(correct) {
+  score++;
+  document.getElementById("score").textContent=score;
+  feedback.textContent="🌟 Correct! Amazing job!";
+  feedback.style.color="#42a66b";
+ } else {
+  feedback.textContent="💗 Good try! The answer was: "+q.answer.toUpperCase();
+  feedback.style.color="#bd789a";
+ }
+
+ document.getElementById("checkButton").classList.add("hidden");
+ document.getElementById("nextButton").classList.remove("hidden");
+}
+
+function nextQuestion() {
+ if(!questionLocked) return;
+ current++;
+ if(current>=10) finishExercise();
+ else renderQuestion();
+}
+
+/* ---------------- REWARDS ---------------- */
+
+function getCategory(scoreValue) {
+ const percentage=scoreValue*10;
+ if(percentage>=90) return "Magic";
+ if(percentage>=61) return "Normal";
+ return "Silly";
+}
+
+function finishExercise() {
+ if(finishing) return;
+ finishing=true;
+ stopListening();
+
+ const earned=score===10 ? 3 :
+              score===9 ? 2 :
+              score===8 ? 1 : 0;
+
+ const category=getCategory(score);
+
+ const oldEggCount=saved.eggs.length;
+ saved.stars+=earned;
+
+ // Each completed 20-star milestone creates one egg.
+ while(saved.stars >= (saved.eggsCreated+1)*20 &&
+       saved.unlocked.length+saved.eggs.length<20) {
+  saved.eggs.push({
+   category:category,
+   milestone:(saved.eggsCreated+1)*20
+  });
+  saved.eggsCreated++;
+ }
+
+ saveData();
+
+ document.getElementById("progressBar").style.width="100%";
+ document.getElementById("earnedStars").textContent=
+  earned ? "⭐".repeat(earned) : "💗";
+ document.getElementById("resultScore").textContent=score+" out of 10 correct";
+
+ const categoryName=category==="Magic" ? "✨ MAGIC DINOS" :
+                    category==="Normal" ? "🌿 NORMAL DINOS" :
+                    "🤪 SILLY DINOS";
+
+ document.getElementById("resultCategory").textContent=categoryName;
+
+ let message="You earned "+earned+" star"+(earned===1?"":"s")+"! ";
+
+ if(saved.eggs.length>oldEggCount) {
+  message+="🥚 A mystery egg has arrived! Go to your collection to hatch it!";
+ } else if(saved.stars<20*(saved.eggsCreated+1)) {
+  const remaining=20*(saved.eggsCreated+1)-saved.stars;
+  message+=remaining+" more star"+(remaining===1?"":"s")+" until your next egg!";
+ } else if(saved.unlocked.length===20) {
+  message+="You have collected all 20 dinosaurs! 🏆";
+ }
+
+ document.getElementById("rewardMessage").textContent=message;
+
+ const eggArea=document.getElementById("resultEggArea");
+ eggArea.innerHTML="";
+ if(saved.eggs.length>0) {
+  const title=document.createElement("h3");
+  title.textContent="🥚 You have "+saved.eggs.length+" egg(s) waiting!";
+  eggArea.appendChild(title);
+  const imgWrap=document.createElement("div");
+  imgWrap.innerHTML=eggSVG();
+  eggArea.appendChild(imgWrap);
+ }
+
+ updateStats();
+ showPage("results");
+}
+
+/* ---------------- INITIALISE ---------------- */
+
+updateStats();
+renderCollection();
+showPage("home");
+
+</script>
+</body>
+</html>
